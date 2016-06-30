@@ -49,6 +49,14 @@ $('document').ready(function(){
 
   evilGlob.email = getUrlParam('email') ? getUrlParam('email') : 'apost@post.no';
 
+  // does the browser support SW?
+  setTimeout(function(){
+    if(evilGlob.supportsSW === false){
+      $('#unsupportedBrowser').show();
+    }
+  }, 500);
+
+
   $('#putUpdate').click(function(){
     $.ajax({
       type: 'PUT',
