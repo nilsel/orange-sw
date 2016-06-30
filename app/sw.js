@@ -38,7 +38,7 @@ self.addEventListener('push', function(event) {
   var title = 'Orange Alert™';
   event.waitUntil(
     self.registration.showNotification(title, {
-      body: 'Skattefuten kommer for å ta deg, løp!',
+      body: 'Du har fått tilbake en milliard på skatten.',
       icon: 'images/orange.png',
       tag: 'default'
     }));

@@ -69,6 +69,21 @@ $('document').ready(function(){
     });
   });
 
+
+  $('#postNotification').click(function(){
+    $.ajax({
+      type: 'POST',
+      url: 'https://android.googleapis.com/gcm/send',
+      contentType: 'application/json',
+      beforeSend: function(req){
+        req.setRequestHeader('Authorization', 'key=AIzaSyD9ro7BaGsWAJnLlqTHo2siiWCF7oqSHis');
+      },
+      data: {
+        registration_ids: [evilGlob.pnsId]
+      }
+    });
+  });
+
 });
 
 
@@ -82,4 +97,8 @@ function getUrlParam(sParam) {
       return sParameterName[1];
     }
   }
+}
+
+function showApiError(){
+  alert('This is a pretty error message. Enjoy.');
 }
