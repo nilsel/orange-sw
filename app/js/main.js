@@ -13,6 +13,7 @@ $.ajaxPrefilter( function( options, originalOptions, jqXHR ) {
 
 // globals, yolo!
 var evilGlob = {
+  supportsSW: false,
   backendHost: 'https://hc2016-admin-backend.herokuapp.com',
   api: {
     update: '/api/update'
@@ -22,16 +23,18 @@ var evilGlob = {
 };
 
 
+
 // Service worker yay!
 if ('serviceWorker' in navigator) {
-  console.log('Service Worker is supported');
+  // console.log('Service Worker is supported');
+  evilGlob.supportsSW = true;
 
   navigator.serviceWorker.register('sw.js').then(function(reg) {
-    console.log(':^)', reg);
+    // console.log(':^)', reg);
     reg.pushManager.subscribe({
       userVisibleOnly: true
     }).then(function(sub) {
-      console.log('endpoint:', sub.endpoint);
+      // console.log('endpoint:', sub.endpoint);
       evilGlob.pnsId = sub.endpoint.split('/').pop();
       $('pre#info').text(evilGlob.pnsId);
     });
@@ -43,6 +46,9 @@ if ('serviceWorker' in navigator) {
 
 // DOM-binded stuff
 $('document').ready(function(){
+
+  // var slask = email.isTrue ? sdfjkdsf : dfjkdsfjk
+  evilGlob.email = getUrlParam('email') ? getUrlParam('email') : 'apost@post.no';
 
   $('#putUpdate').click(function(){
     $.ajax({
@@ -57,3 +63,16 @@ $('document').ready(function(){
   });
 
 });
+
+
+// utility stuff
+function getUrlParam(sParam) {
+  var sPageURL = window.location.search.substring(1);
+  var sURLVariables = sPageURL.split('&');
+  for (var i = 0; i < sURLVariables.length; i++){
+    var sParameterName = sURLVariables[i].split('=');
+    if (sParameterName[0] == sParam){
+      return sParameterName[1];
+    }
+  }
+}
