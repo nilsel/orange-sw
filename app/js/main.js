@@ -18,7 +18,7 @@ var evilGlob = {
     update: '/api/update'
   },
   pnsId: '',
-  email: 'q2i@storebrand.no'
+  email: 'apost@post.no'
 };
 
 
@@ -50,7 +50,7 @@ $('document').ready(function(){
       url: evilGlob.backendHost + evilGlob.api.update,
       contentType: 'application/json',
       data: {
-        pnsId: evilGlob.pnsId,
+        id: evilGlob.pnsId,
         email: evilGlob.email
       }
     });
