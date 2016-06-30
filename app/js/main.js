@@ -47,7 +47,6 @@ if ('serviceWorker' in navigator) {
 // DOM-binded stuff
 $('document').ready(function(){
 
-  // var slask = email.isTrue ? sdfjkdsf : dfjkdsfjk
   evilGlob.email = getUrlParam('email') ? getUrlParam('email') : 'apost@post.no';
 
   $('#putUpdate').click(function(){
