@@ -34,33 +34,45 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').then(function(reg) {
     // console.log(':^)', reg);
 
-    reg.pushManager.subscribe({
-      userVisibleOnly: true
-    }).then(function(sub) {
-      // console.log('endpoint:', sub.endpoint);
-      evilGlob.pnsId = sub.endpoint.split('/').pop();
-      $('pre#info').text(evilGlob.pnsId);
+  navigator.serviceWorker.ready.then(function(){
+
+    console.log('serviceWorker is ready!');
+
+      reg.pushManager.subscribe({
+        userVisibleOnly: true
+      }).then(function(sub) {
+        // console.log('endpoint:', sub.endpoint);
+        evilGlob.pnsId = sub.endpoint.split('/').pop();
+        $('pre#info').text(evilGlob.pnsId);
+
+        evilGlob.msgKey = sub.getKey('p256dh');
+        evilGlob.auth = sub.getKey('auth');
+        console.log(evilGlob.msgKey);
+        console.log(sub);
+        console.log(JSON.stringify(sub));
 
 
-      evilGlob.msgKey = sub.getKey('p256dh');
-      evilGlob.auth = sub.getKey('auth');
-      console.log(evilGlob.msgKey);
-      console.log(sub);
-      console.log(JSON.stringify(sub));
-
-
-    });
-  }).catch(function(error) {
+      });
+    }).catch(function(error) {
        console.log(':^(', error);
+    });
+
   });
+
 }
 
 
 // DOM-binded stuff
 $('document').ready(function(){
 
-  evilGlob.email = getUrlParam('email') ? getUrlParam('email') : 'apost@post.no';
 
+  if(getUrlParam('email') == undefined){
+    // no email param? go register
+    window.location = 'http://automatic-octo-adventure.herokuapp.com';
+  }
+  else {
+    evilGlob.email = getUrlParam('email');
+  }
   // does the browser support SW?
   setTimeout(function(){
     if(evilGlob.supportsSW === false){
