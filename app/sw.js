@@ -24,7 +24,7 @@
 console.log('Started', self);
 
 self.config = {
-  email: ''
+  email: 'apost@post.no'
 }
 
 self.addEventListener('install', function(event) {

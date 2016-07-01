@@ -31,7 +31,7 @@ if ('serviceWorker' in navigator) {
   // console.log('Service Worker is supported');
   evilGlob.supportsSW = true;
 
-  navigator.serviceWorker.register('sw.js').then(function(reg) {
+  navigator.serviceWorker.register('/sw.js').then(function(reg) {
     // console.log(':^)', reg);
 
   navigator.serviceWorker.ready.then(function(){
@@ -50,6 +50,9 @@ if ('serviceWorker' in navigator) {
         evilGlob.auth = sub.getKey('auth');
         console.log(evilGlob.msgKey, evilGlob.auth);
         console.log('subscription: ' + JSON.stringify(sub));
+
+        evilGlob.email = getUrlParam('email');
+        swMessage({ 'email': evilGlob.email });
       });
 
     }).catch(function(error) {
@@ -80,7 +83,7 @@ $('document').ready(function(){
     }
     else {
       updateBackend();
-      swMessage({ 'email': evilGlob.email });
+      // swMessage({ 'email': evilGlob.email });
     }
   }, 500);
 
@@ -128,7 +131,9 @@ function swMessage(message) {
          resolve(event.data);
        }
      };
-    navigator.serviceWorker.controller.postMessage(message);
+     // setTimeout(function(){
+       navigator.serviceWorker.controller.postMessage(message);
+     // }, 1500);
   });
 }
 
