@@ -35,6 +35,8 @@ self.addEventListener('activate', function(event) {
 self.addEventListener('push', function(event) {
   console.log('Push message received', event);
 
+  console.log('SW got push data:', event.data);
+
   var title = 'Orange Alert™';
   event.waitUntil(
     self.registration.showNotification(title, {

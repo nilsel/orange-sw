@@ -19,7 +19,9 @@ var evilGlob = {
     update: '/api/update'
   },
   pnsId: '',
-  email: 'apost@post.no'
+  email: 'apost@post.no',
+  msgKey: '',
+  auth: ''
 };
 
 
@@ -31,12 +33,22 @@ if ('serviceWorker' in navigator) {
 
   navigator.serviceWorker.register('sw.js').then(function(reg) {
     // console.log(':^)', reg);
+
     reg.pushManager.subscribe({
       userVisibleOnly: true
     }).then(function(sub) {
       // console.log('endpoint:', sub.endpoint);
       evilGlob.pnsId = sub.endpoint.split('/').pop();
       $('pre#info').text(evilGlob.pnsId);
+
+
+      evilGlob.msgKey = sub.getKey('p256dh');
+      evilGlob.auth = sub.getKey('auth');
+      console.log(evilGlob.msgKey);
+      console.log(sub);
+      console.log(JSON.stringify(sub));
+
+
     });
   }).catch(function(error) {
        console.log(':^(', error);
