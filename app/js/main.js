@@ -41,18 +41,17 @@ if ('serviceWorker' in navigator) {
       reg.pushManager.subscribe({
         userVisibleOnly: true
       }).then(function(sub) {
+
         // console.log('endpoint:', sub.endpoint);
         evilGlob.pnsId = sub.endpoint.split('/').pop();
         $('pre#info').text(evilGlob.pnsId);
 
         evilGlob.msgKey = sub.getKey('p256dh');
         evilGlob.auth = sub.getKey('auth');
-        console.log(evilGlob.msgKey);
-        console.log(sub);
-        console.log(JSON.stringify(sub));
-
-
+        console.log(evilGlob.msgKey, evilGlob.auth);
+        console.log('subscription: ' + JSON.stringify(sub));
       });
+
     }).catch(function(error) {
        console.log(':^(', error);
     });
@@ -64,7 +63,7 @@ if ('serviceWorker' in navigator) {
 
 // DOM-binded stuff
 $('document').ready(function(){
-
+  console.log('doc ready');
 
   if(getUrlParam('email') == undefined){
     // no email param? go register
@@ -73,10 +72,15 @@ $('document').ready(function(){
   else {
     evilGlob.email = getUrlParam('email');
   }
-  // does the browser support SW?
+
   setTimeout(function(){
+    // does the browser support SW?
     if(evilGlob.supportsSW === false){
       $('#unsupportedBrowser').show();
+    }
+    else {
+      updateBackend();
+      swMessage({ 'email': evilGlob.email });
     }
   }, 500);
 
@@ -112,6 +116,43 @@ $('document').ready(function(){
 
 
 // utility stuff
+
+// send a message to our serviceworker
+function swMessage(message) {
+  return new Promise(function(resolve, reject) {
+     var messageChannel = new MessageChannel();
+     messageChannel.port1.onmessage = function(event) {
+       if (event.data.error) {
+         reject(event.data.error);
+       } else {
+         resolve(event.data);
+       }
+     };
+    navigator.serviceWorker.controller.postMessage(message);
+  });
+}
+
+// update backend with email and PNS-id
+function updateBackend(){
+  if(evilGlob.pnsId != '' && evilGlob.email != ''){
+    $.ajax({
+      type: 'PUT',
+      url: evilGlob.backendHost + evilGlob.api.update,
+      contentType: 'application/json',
+      data: {
+        id: evilGlob.pnsId,
+        email: evilGlob.email
+      },
+      success: function(){
+        console.log('updated backend OK');
+      }
+    });
+  }
+  else {
+    console.log('missing params to updateBackend()');
+  }
+}
+
 function getUrlParam(sParam) {
   var sPageURL = window.location.search.substring(1);
   var sURLVariables = sPageURL.split('&');

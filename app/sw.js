@@ -23,6 +23,10 @@
 
 console.log('Started', self);
 
+self.config = {
+  email: ''
+}
+
 self.addEventListener('install', function(event) {
   self.skipWaiting();
   console.log('Installed', event);
@@ -33,8 +37,8 @@ self.addEventListener('activate', function(event) {
 });
 
 self.addEventListener('push', function(event) {
-  console.log('Push message received', event);
 
+  console.log('Push message received', event);
   console.log('SW got push data:', event.data);
 
   var title = 'Orange Alert™';
@@ -52,7 +56,7 @@ self.addEventListener('push', function(event) {
 self.addEventListener('notificationclick', function(event) {
   console.log('Notification click: tag ', event.notification.tag);
   event.notification.close();
-  var url = 'https://hc2016-pusher.herokuapp.com/index.html?email=abcde@def.com';
+  var url = 'https://hc2016-pusher.herokuapp.com/index.html?email=' + self.config.email;
   event.waitUntil(
     clients.matchAll({
       type: 'window'
@@ -69,4 +73,14 @@ self.addEventListener('notificationclick', function(event) {
       }
     })
   );
+});
+
+// handle messages from main.js
+self.addEventListener('message', function(event) {
+  // event.ports[0].postMessage({'test': 'This is my response.'});
+  console.log('serviceworkers got a message', event);
+
+  if(event.data.email){
+    self.config.email = event.data.email;
+  }
 });
