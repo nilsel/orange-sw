@@ -45,7 +45,7 @@ self.addEventListener('push', function(event) {
   event.waitUntil(
     self.registration.showNotification(title, {
       body: 'Du har fått tilbake en milliard på skatten.',
-      icon: 'images/orange.png',
+      icon: 'images/orange64.png',
       tag: 'default'
     }));
 
@@ -82,5 +82,6 @@ self.addEventListener('message', function(event) {
 
   if(event.data.email){
     self.config.email = event.data.email;
+    console.log('email set in SW', self.config.email);
   }
 });
