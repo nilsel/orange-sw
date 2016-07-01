@@ -41,12 +41,31 @@ self.addEventListener('push', function(event) {
   console.log('Push message received', event);
   console.log('SW got push data:', event.data);
 
-  var title = 'Orange Alert™';
+  var messages = [
+    'Du har fått tilbake en milliard på skatten.',
+    'Husk selvangivelsen!',
+    'Momsregnskap for mai-juni må leveres om to dager.',
+    'Nye skatteregler for 2017, klikk for å lese.',
+    'Happy Hour på Oslo Børs i dag!',
+    'Din revisor har levert inn årsregnskap.',
+    'Nye ansatte? Husk å melde inn i pensjonsordning.',
+    'Your fired! Husk å melde ut av pensjonsordning',
+    'Make Javascript Great Again'
+  ];
+
+  var tags = [
+  'default',
+  'info',
+  'alert']
+
+  
+
+  var title = 'Melding fra Storebrand';
   event.waitUntil(
     self.registration.showNotification(title, {
-      body: 'Du har fått tilbake en milliard på skatten.',
+      body: messages[Math.floor(Math.random() * messages.length)],
       icon: 'images/orange64.png',
-      tag: 'default'
+      tag: tags[Math.floor(Math.random() * tags.length)]
     }));
 
 });
